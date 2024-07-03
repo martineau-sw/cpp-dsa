@@ -16,9 +16,9 @@ class LinkedList {
     ~LinkedList() = default;
 
     T at(int);
+    bool contains(T) const;
     void prepend(T);
     void append(T);
-    bool contains(T) const;
     void insert(int, T);
     T remove_first();
     T remove_last();
@@ -172,7 +172,7 @@ T LinkedList<T>::remove(int index) {
   T value = temp->next->value;
   temp->next = temp->next->next;
   this->length--;
-  return value;
+    return value;
 }
 
 } // namespace dsa

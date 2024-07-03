@@ -16,11 +16,18 @@ int main() {
     llist.append(i);
   }
 
-  std::cout << "length: " << llist.length << '\n';
-  for (int i {}; i < llist.length; ++i) 
-    std::cout << "  " << i << ": " << llist.at(i) << '\n';
+  auto print_llist = [&] () { 
+    std::cout << "length: " << llist.length << '\n';
+    for (int i {}; i < llist.length; ++i) 
+      std::cout << "  " << i << ": " << llist.at(i) << '\n';
+  };
 
-  llist.at(13);
+  print_llist();
+
+  llist.remove(2);
+  llist.remove_last();
+
+  print_llist();
 
   return 0;
 }

@@ -19,7 +19,10 @@ class LinkedList {
     void prepend(T);
     void append(T);
     bool contains(T) const;
-    void insert(T, int);
+    void insert(int, T);
+    T remove_first();
+    T remove_last();
+    T remove(int);
 
     std::shared_ptr<Node<T>> head;
     std::shared_ptr<Node<T>> tail;
@@ -97,7 +100,7 @@ bool LinkedList<T>::contains(T value) const {
 }
 
 template <class T>
-void LinkedList<T>::insert(T value, int index) {
+void LinkedList<T>::insert(int index, T value) {
 
   if (index < 0 || index > length) {
     std::cerr << "Invalid insertion index for linked list: " << index << '\n';
@@ -126,6 +129,50 @@ void LinkedList<T>::insert(T value, int index) {
   iterator->next = new_node;
 
   this->length++;
+}
+
+template <class T>
+T LinkedList<T>::remove_first() {
+  this->length--;
+  auto temp { this->head };
+  this->head = temp->next;
+  T value = temp->value;
+  temp.reset();
+  return value;
+}
+
+template <class T>
+T LinkedList<T>::remove_last() {
+  this->length--;
+  auto temp { this-> head };
+  for (int i {}; i < length - 1; ++i) 
+    temp = temp->next;
+  this->tail = temp;
+  T value = temp->next->value;
+  temp->next.reset();
+  return value;
+}
+
+template <class T>
+T LinkedList<T>::remove(int index) {
+  if (index < 0 || index > length) {
+    std::cerr << "Invalid insertion index for linked list: " << index << '\n';
+    std::cerr << "\tvalid range: [0, " << length << "]" << std::endl;
+    return T{};
+  }
+
+  if (index == 0) 
+    return remove_first();
+
+  auto temp { this->head };
+
+  for (int i {}; i < index - 1; ++i) 
+    temp = temp->next;
+
+  T value = temp->next->value;
+  temp->next = temp->next->next;
+  this->length--;
+  return value;
 }
 
 } // namespace dsa

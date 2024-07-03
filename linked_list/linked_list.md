@@ -35,7 +35,7 @@ Insertion operations are constant time, but index access is $O(n)$ therefore
 arbitrary insertions inevitable must iterate to reach given index. Prepending
 and appending are constant time due to having direct pointers, however.
 
-#### Front
+#### Front (Prepend)
 
 $O(1)$
 
@@ -43,7 +43,7 @@ $O(1)$
 
 $O(n)$
 
-#### End
+#### End (Append)
 
 $O(1)$
 

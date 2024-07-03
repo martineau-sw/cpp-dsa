@@ -8,11 +8,11 @@ EXECUTABLE_NAME = main
 CXX_SOURCES = $(wildcard $(SOURCE_DIR)/*.cc) 
 CXX_OBJECTS = $(patsubst $(SOURCE_DIR)/%.cc, $(BUILD_DIR)/%.o, $(CXX_SOURCES)) 
 
-CXX = g++
+CXX = clang++
 CXX_STANDARD = c++17
 CXXFLAGS = $(CXX_WARNINGS) -std=$(CXX_STANDARD)
 CPPFLAGS = -I $(INCLUDE_DIR)
-LDFLAGS =  -lncurses
+LDFLAGS =
 
 
 ifeq (%(ENABLE_WARNINGS), 1)

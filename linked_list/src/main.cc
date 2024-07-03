@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Linked_List.h"
+#include "LinkedList.h"
 #include "Node.h"
 
 int main() {

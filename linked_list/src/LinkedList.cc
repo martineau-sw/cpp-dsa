@@ -1,3 +1,5 @@
+#include "LinkedList.h"
+
 #include "Node.h"
 
 namespace martineausw {

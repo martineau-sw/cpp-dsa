@@ -7,25 +7,24 @@
 int main() {
   using martineausw::dsa::LinkedList;
 
-  LinkedList<int> llist {5}; 
-
-  llist.prepend(4);
-  llist.append(6);
-  
-  for (int i {}; i < 10; ++i) {
-    llist.append(i);
-  }
+  LinkedList<int> llist {1}; 
 
   auto print_llist = [&] () { 
-    std::cout << "length: " << llist.length << '\n';
-    for (int i {}; i < llist.length; ++i) 
+    std::cout << "length: " << llist.get_length() << '\n';
+    for (int i {}; i < llist.get_length(); ++i) 
       std::cout << "  " << i << ": " << llist.at(i) << '\n';
   };
 
-  print_llist();
+  llist.prepend(0);
+  llist.append(3);
+  llist.append(4);
 
-  llist.remove(2);
+  llist.insert(2, 2);
+  llist.remove_first();
   llist.remove_last();
+  llist.remove(1);
+  std::cout << std::boolalpha;
+  std::cout << "contains 3? " << llist.contains(3) << '\n';
 
   print_llist();
 

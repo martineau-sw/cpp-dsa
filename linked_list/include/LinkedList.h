@@ -15,7 +15,7 @@ class LinkedList {
     LinkedList(T value);
     ~LinkedList() = default;
 
-    T at(int);
+    const T& at(int) const;
     bool contains(T) const;
     void prepend(T);
     void append(T);
@@ -23,9 +23,14 @@ class LinkedList {
     T remove_first();
     T remove_last();
     T remove(int);
+    
+    const std::unique_ptr<Node<T>> &get_head() const;
+    const Node<T>* get_tail() const;
+    int get_length() const;
 
-    std::shared_ptr<Node<T>> head;
-    std::shared_ptr<Node<T>> tail;
+  private:
+    std::unique_ptr<Node<T>> head;
+    Node<T>* tail;
     int length;
 };
 
@@ -37,75 +42,74 @@ LinkedList<T>::LinkedList()
 template <class T>
 LinkedList<T>::LinkedList(T value) 
   : head { nullptr }, tail { nullptr }, length { 1 } {
-  auto new_node { std::make_shared<Node<T>>(value) };
-  this->head = new_node;
-  this->tail = new_node;
+  head = std::make_unique<Node<T>>(value);
+  tail = head.get();
 }
 
 template <class T>
-T LinkedList<T>::at(int index) {
+const std::unique_ptr<Node<T>> &LinkedList<T>::get_head() const {
+  return head;
+}
+
+template <class T>
+const Node<T>* LinkedList<T>::get_tail() const {
+  return tail;
+}
+
+template <class T>
+int LinkedList<T>::get_length() const {
+  return length;
+}
+
+template <class T>
+const T &LinkedList<T>::at(int index) const {
   if (index < 0 || index >= length) {
     std::cerr << "Invalid `at` index: " << index << '\n';
     std::cerr << "\tvalid range: [0, " << length << ")" << std::endl;
   }
-  auto iterator { this->head };  
+
+  auto node = get_head().get();
   for ( int i {}; i < index; ++i ) 
-    iterator = iterator->next; 
-  return iterator->value;
+    node = node->next.get();
+  return node->value;
 }
 
 template <class T>
 void LinkedList<T>::prepend(T value) {
-  auto new_node { std::make_shared<Node<T>>(value) };
-  this->length++;
+  length++;
 
-  if (length == 0) {
-    this->head = new_node;
-    this->tail = new_node;
+  if (!head) {
+    head = std::make_unique<Node<T>>(value);
+    tail = head.get();
     return;
   }
-  
-  new_node->next = this->head;
-  this->head = new_node;
+
+  auto new_node { std::make_unique<Node<T>>(value) };
+  new_node->next = std::move(head);
+  head = std::move(new_node);
 }
 
 template <class T>
 void LinkedList<T>::append(T value) {
-  auto new_node { std::make_shared<Node<T>>(value) };
-  this->length++;
-
-  if (length == 0) {
-    this->head = new_node;
-    this->tail = new_node;
+  if (!head) {
+    prepend(value);
     return;
   }
 
-  this->tail->next = new_node;
-  this->tail = new_node;
-}
+  length++;
 
-template <class T>
-bool LinkedList<T>::contains(T value) const {
-  auto iterator { this->head };
-
-  if (iterator == this->head) return true;
-  if (iterator == this->tail) return true;
-
-  while (iterator != this->tail ) {
-    if (iterator->value == value) break;
-    iterator = iterator->next;
+  auto iterator = head.get();
+  while(iterator != tail) {
+    iterator = iterator->next.get(); 
   }
-
-  return true;
+  iterator->next = std::make_unique<Node<T>>(value);
+  tail = iterator->next.get();
 }
 
-template <class T>
+template <class T> 
 void LinkedList<T>::insert(int index, T value) {
-
   if (index < 0 || index > length) {
-    std::cerr << "Invalid insertion index for linked list: " << index << '\n';
-    std::cerr << "\tvalid range: [0, " << length << "]" << std::endl;
-    return;
+    std::cerr << "Invalid index on insert\n";
   }
 
   if (index == 0) {
@@ -113,66 +117,88 @@ void LinkedList<T>::insert(int index, T value) {
     return;
   }
 
-  if (index == length) { 
+  if (index == length) {
     append(value);
     return;
   }
 
-  auto iterator { this->head };
+  length++;
 
-  for (int i {}; i < index - 1; ++i) 
-    iterator = iterator->next;
-   
-  auto new_node { std::make_shared<Node<T>>(value) };
-  
-  new_node->next = iterator->next->next;
-  iterator->next = new_node;
+  int i { 0 };
+  auto iterator { head.get() };
+  while (i < index) {
+    iterator = head->next.get(); 
+    i++;
+  }
 
-  this->length++;
+  auto next = std::move(iterator->next);
+  iterator->next = std::make_unique<Node<T>>(value);
+  iterator->next->next = std::move(next);
 }
 
 template <class T>
 T LinkedList<T>::remove_first() {
-  this->length--;
-  auto temp { this->head };
-  this->head = temp->next;
-  T value = temp->value;
-  temp.reset();
+  T value { head->value };
+  auto next = std::move(head->next);
+  head = std::move(next);
+  length--;
   return value;
 }
 
 template <class T>
 T LinkedList<T>::remove_last() {
-  this->length--;
-  auto temp { this-> head };
-  for (int i {}; i < length - 1; ++i) 
-    temp = temp->next;
-  this->tail = temp;
-  T value = temp->next->value;
-  temp->next.reset();
+  auto iterator { head.get() };
+  while (iterator->next.get() != tail) {
+    iterator = iterator->next.get();
+  }
+  T value = iterator->next->value;
+  iterator->next = nullptr;
+  tail = iterator;
+  length--;
   return value;
 }
 
 template <class T>
 T LinkedList<T>::remove(int index) {
-  if (index < 0 || index > length) {
-    std::cerr << "Invalid insertion index for linked list: " << index << '\n';
-    std::cerr << "\tvalid range: [0, " << length << "]" << std::endl;
-    return T{};
+  if (index < 0 || index >= length) {
+    std::cerr << "Invalid index on remove\n";
   }
 
-  if (index == 0) 
+  if (index == 0) {
     return remove_first();
+  }
 
-  auto temp { this->head };
+  if (index == length - 1) {
+    return remove_last();
+  }
 
-  for (int i {}; i < index - 1; ++i) 
-    temp = temp->next;
+  int i { 0 };
+  auto iterator { head.get() };
 
-  T value = temp->next->value;
-  temp->next = temp->next->next;
-  this->length--;
-    return value;
+  while (i < index - 1) {
+    iterator = iterator->next.get();
+    i++;
+  }
+
+  T value = iterator->next->value;
+  iterator->next = std::move(iterator->next->next);
+  length--;
+  return value;
+}
+
+template <class T>
+bool LinkedList<T>::contains(T value) const {
+  if(head && head->value == value) {
+    return true;
+  }
+
+  auto iterator = head.get();
+  while (iterator != tail) {
+    iterator = iterator->next.get();
+    if (iterator->value == value) 
+      return true;
+  }
+  return false;
 }
 
 } // namespace dsa

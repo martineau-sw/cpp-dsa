@@ -1,9 +1,10 @@
 #ifndef _LINKEDLIST_H_ 
 #define _LINKEDLIST_H_
 
+#include <iostream>
 #include <memory>
 
-#include "Node.h"
+#include "Node.hpp"
 
 namespace martineausw {
 namespace dsa {

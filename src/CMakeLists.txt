@@ -1,0 +1,2 @@
+add_subdirectory(linked_list)
+add_subdirectory(doubly_linked_list)

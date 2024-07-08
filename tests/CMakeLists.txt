@@ -1,26 +1,42 @@
-add_executable(list_tests test.cc)
+add_executable(llist_tests llist_tests.cc)
+add_executable(dlist_tests dlist_tests.cc)
 
-target_include_directories(list_tests 
+target_include_directories(llist_tests 
   PRIVATE
   ${PROJECT_SOURCE_DIR}/src/linked_list/
+  )
+
+target_include_directories(dlist_tests 
+  PRIVATE
   ${PROJECT_SOURCE_DIR}/src/doubly_linked_list/
   )
 
-include(Echos)
-echo()
-
-target_link_libraries(list_tests PUBLIC 
+target_link_libraries(llist_tests PUBLIC 
   gtest_main
 )
 
+target_link_libraries(dlist_tests PUBLIC 
+  gtest_main
+)
 
 target_set_warnings(
-  TARGET list_tests
+  TARGET llist_tests
   ENABLE ON 
   AS_ERRORS OFF
 )
 
+target_set_warnings(
+  TARGET dlist_tests
+  ENABLE ON
+  AS_ERRORS OFF
+)
+
 add_test(
-  NAME list_tests
-  COMMAND list_tests
+  NAME llist_tests
+  COMMAND llist_tests
+)
+
+add_test(
+  NAME dlist_tests
+  COMMAND dlist_tests
 )

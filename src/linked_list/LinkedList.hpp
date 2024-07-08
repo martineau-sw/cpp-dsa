@@ -98,13 +98,17 @@ void LinkedList<T>::append(T value) {
   }
 
   length++;
-
+  /*
   auto iterator = head.get();
   while(iterator != tail) {
     iterator = iterator->next.get(); 
   }
   iterator->next = std::make_unique<Node<T>>(value);
   tail = iterator->next.get();
+  */
+
+  tail->next = std::make_unique<Node<T>>(value);
+  tail = tail->next.get();
 }
 
 template <class T> 
@@ -163,6 +167,7 @@ template <class T>
 T LinkedList<T>::remove(int index) {
   if (index < 0 || index >= length) {
     std::cerr << "Invalid index on remove\n";
+    return NULL;
   }
 
   if (index == 0) {

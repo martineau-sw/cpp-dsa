@@ -9,19 +9,18 @@ namespace dsa {
 template <class T>
 class DNode {
 
-  friend class DLinkedList;
-
   public:
-    DNode();
-    ~DNode() = default
-    const T get_value() const;
-    const std::weak_ptr<DNode<T>> get_prev() const;
-    const std::weak_ptr<DNode<T>> get_next() const;
-  private:
+    DNode(T value);
+    ~DNode() = default;
     T value;
-    std::shared_ptr<DNode<T>> prev;
-    std::shared_ptr<DNode<T>> next;
+    DNode<T>* prev;
+    std::unique_ptr<DNode<T>> next;
 };
+
+template <class T>
+DNode<T>::DNode(T value) 
+  : value { value }, prev { nullptr }, next { nullptr } {
+}
 
 } // namespace dsa
 } // namespace martineausw

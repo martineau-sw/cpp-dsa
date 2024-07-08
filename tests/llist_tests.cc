@@ -5,7 +5,23 @@
 
 #include <gtest/gtest.h>
 
-TEST(InsertTest, HandlesAtZero) {
+TEST(LinkedListTest, AppendMany) {
+  martineausw::dsa::LinkedList<int> list {};
+
+  const int LENGTH { 1000 };
+
+  for (int i { 0 }; i < LENGTH; ++i ) 
+    list.append(i);
+
+  EXPECT_EQ(list.at(-1), NULL);
+
+  for (int i { 0 }; i < LENGTH; ++i ) 
+    EXPECT_EQ(list.at(i), i);
+  
+  EXPECT_EQ(list.at(LENGTH), NULL);
+}
+
+TEST(InsertTest, InsertIndexAtZero) {
 
   martineausw::dsa::LinkedList<int> list {};
 
@@ -19,7 +35,7 @@ TEST(InsertTest, HandlesAtZero) {
 
 }
 
-TEST(InsertTest, HandlesAtLength) {
+TEST(LinkedListTest, InsertIndexAtLength) {
 
   martineausw::dsa::LinkedList<int> list {};
 

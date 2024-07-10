@@ -24,3 +24,8 @@ $$O(1)$$
 Removes an element from the top, returning its value.
 
 $$O(1)$$
+
+### Peak
+
+Returns a read only reference from the top of the stack. Not required, perhaps 
+useful

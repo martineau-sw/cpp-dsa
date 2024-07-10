@@ -15,19 +15,50 @@ class Stack {
 
     void push(T);
     T pop();
-    const T &peak() const;
+    const T* peak() const;
     int get_length() const;
   private:
-    std::unique_ptr<T> top;
     int length;
     class Node {
       public: 
+        Node(T);
+        ~Node() = default;
         T value;
         std::unique_ptr<T> next; 
     }; // class Node
+    std::unique_ptr<Stack<T>::Node> top;
 }; // class Stack
 
+template <class T>
+Stack<T>::Stack() 
+  : top { nullptr }, length { 0 } {
+}
 
+template <class T>
+void Stack<T>::push(T value) {
+  if (length == 0) {
+    top = std::make_unique<Stack<T>::Node>(value);
+  }
+
+  auto new_node = std::make_unique<Stack<T>::Node>(value);
+  new_node->next = std::move(top);
+  top = std::move(new_node);
+}
+
+template <class T>
+T Stack<T>::pop() {
+
+}
+
+template <class T>
+const T* Stack<T>::peak() const {
+  return top ? &(top->value) : nullptr;
+}
+
+template <class T>
+Stack<T>::Node::Node(T value) 
+  : value { value }, next { nullptr } {
+}
 
 } // dsa 
 } // martineausw

@@ -24,7 +24,7 @@ class Stack {
         Node(T);
         ~Node() = default;
         T value;
-        std::unique_ptr<T> next; 
+        std::unique_ptr<Stack<T>::Node> next; 
     }; // class Node
     std::unique_ptr<Stack<T>::Node> top;
 }; // class Stack
@@ -36,11 +36,13 @@ Stack<T>::Stack()
 
 template <class T>
 void Stack<T>::push(T value) {
+  length++;
   if (length == 0) {
     top = std::make_unique<Stack<T>::Node>(value);
+    return;
   }
 
-  auto new_node = std::make_unique<Stack<T>::Node>(value);
+  auto new_node { std::make_unique<Stack<T>::Node>(value) };
   new_node->next = std::move(top);
   top = std::move(new_node);
 }
@@ -53,6 +55,11 @@ T Stack<T>::pop() {
 template <class T>
 const T* Stack<T>::peak() const {
   return top ? &(top->value) : nullptr;
+}
+
+template <class T>
+int Stack<T>::get_length() const {
+  return length;
 }
 
 template <class T>

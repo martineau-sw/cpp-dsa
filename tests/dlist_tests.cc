@@ -186,7 +186,7 @@ TEST(DLinkedListTest, ArbitraryInsert) {
   EXPECT_EQ(list.get_length(), 6);
   
   int i { 0 };
-  auto iterator { list.get_head().get() };
+  auto iterator { list.get_head() };
   while(iterator) {
     EXPECT_EQ(iterator->value, i++);
     iterator = iterator->next.get();
@@ -228,7 +228,7 @@ TEST(DLinkedListTest, ArbitraryRemove) {
   EXPECT_EQ(list.get_length(), 3);
   EXPECT_EQ(list.get_tail()->value, 4);
 
-  auto iterator { list.get_head().get() };
+  auto iterator { list.get_head() };
   EXPECT_EQ(iterator->value, 1);
   iterator = iterator->next.get();
   EXPECT_EQ(iterator->value, 2);

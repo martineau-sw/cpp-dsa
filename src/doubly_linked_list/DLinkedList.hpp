@@ -25,7 +25,7 @@ class DLinkedList {
     T remove_last();
     T remove(int);
     
-    const std::unique_ptr<DNode<T>> &get_head() const;
+    const DNode<T>* get_head() const;
     const DNode<T>* get_tail() const;
     int get_length() const;
 
@@ -49,8 +49,8 @@ DLinkedList<T>::DLinkedList(T value)
 }
 
 template <class T>
-const std::unique_ptr<DNode<T>> &DLinkedList<T>::get_head() const {
-  return head;
+const DNode<T>* DLinkedList<T>::get_head() const {
+  return head.get();
 }
 
 template <class T>

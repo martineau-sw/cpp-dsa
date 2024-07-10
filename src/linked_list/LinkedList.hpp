@@ -25,7 +25,7 @@ class LinkedList {
     T remove_last();
     T remove(int);
     
-    const std::unique_ptr<Node<T>> &get_head() const;
+    const Node<T>* get_head() const;
     const Node<T>* get_tail() const;
     int get_length() const;
 
@@ -48,8 +48,8 @@ LinkedList<T>::LinkedList(T value)
 }
 
 template <class T>
-const std::unique_ptr<Node<T>> &LinkedList<T>::get_head() const {
-  return head;
+const Node<T>* LinkedList<T>::get_head() const {
+  return head.get();
 }
 
 template <class T>
@@ -69,7 +69,7 @@ const T &LinkedList<T>::at(int index) const {
     std::cerr << "\tvalid range: [0, " << length << ")" << std::endl;
   }
 
-  auto node = get_head().get();
+  auto node = head.get();
   for ( int i {}; i < index; ++i ) 
     node = node->next.get();
   return node->value;

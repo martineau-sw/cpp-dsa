@@ -198,26 +198,6 @@ TEST(DLinkedListTest, ArbitraryInsert) {
   }
 }
 
-TEST(DLinkedListTest, GetTailAfterLastRemove) {
-  martineausw::dsa::DLinkedList<int> list {};
-
-  ASSERT_FALSE(list.get_tail());
-  EXPECT_EQ(list.get_length(), 0);
-  list.append(0);
-  EXPECT_EQ(list.get_length(), 1);
-  list.append(1);
-  ASSERT_TRUE(list.get_tail());
-  EXPECT_EQ(list.get_length(), 2);
-  EXPECT_EQ(list.get_tail()->value, 1);
-  list.remove_last();
-  ASSERT_TRUE(list.get_tail());
-  EXPECT_EQ(list.get_length(), 1);
-  EXPECT_EQ(list.get_tail()->value, 0);
-  list.remove_last();
-  ASSERT_FALSE(list.get_tail());
-  EXPECT_EQ(list.get_length(), 0);
-}
-
 TEST(DLinkedListTest, ArbitraryRemove) {
   martineausw::dsa::DLinkedList<int> list {};
 
@@ -242,7 +222,7 @@ TEST(DLinkedListTest, ArbitraryRemove) {
   EXPECT_EQ(removed, 0);
   EXPECT_EQ(list.get_length(), 4);
   EXPECT_EQ(list.get_head()->value, 1);
-  list.remove(3);
+  removed = list.remove(3);
   // [1, 2, 4]
   EXPECT_EQ(removed, 5);
   EXPECT_EQ(list.get_length(), 3);

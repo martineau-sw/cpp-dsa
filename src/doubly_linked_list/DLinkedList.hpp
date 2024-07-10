@@ -173,6 +173,31 @@ T DLinkedList<T>::remove_last() {
   return value;
 }
 
+template <class T>
+T DLinkedList<T>::remove(int index) {
+  if (index < 0 || index >= length) {
+    std::cerr << "Index out of range";
+  }
+
+  if (index == 0) {
+    return remove_first();
+  }
+
+  if (index == length - 1) {
+    return remove_last();
+  }
+
+  auto iterator { head.get() };
+  for (int i { 0 }; i < index - 1; ++i) 
+    iterator = iterator->next.get();
+  
+  T value { iterator->next->value };
+  
+  iterator->next = std::move(iterator->next->next);
+  iterator->next->prev = iterator;
+  length--;
+  return value;
+}
 } // namespace dsa
 } // namespace martineausw
 

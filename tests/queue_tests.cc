@@ -3,12 +3,12 @@
 #include <gtest/gtest.h>
 
 TEST(QueueTests, PeakEmpty) {
-  martineausw::dsa::queue<int> queue {};
+  martineausw::dsa::Queue<int> queue {};
   ASSERT_EQ(queue.peak_front(), nullptr);
 }
 
 TEST(QueueTests, PushOne) {
-  martineausw::dsa::queue<int> queue {};
+  martineausw::dsa::Queue<int> queue {};
   EXPECT_EQ(queue.get_length(), 0);
   queue.enqueue(0);
   EXPECT_EQ(*queue.peak_front(), 0);
@@ -17,13 +17,13 @@ TEST(QueueTests, PushOne) {
 }
 
 TEST(QueueTests, PopEmpty) {
-  martineausw::dsa::queue<int> queue {};
+  martineausw::dsa::Queue<int> queue {};
   EXPECT_EQ(queue.dequeue(), nullptr);
   EXPECT_EQ(queue.get_length(), 0);
 }
 
 TEST(QueueTests, PopOne) {
-  martineausw::dsa::queue<int> queue {};
+  martineausw::dsa::Queue<int> queue {};
   EXPECT_EQ(queue.get_length(), 0);
   queue.enqueue(0);
   EXPECT_EQ(*queue.peak_front(), 0);

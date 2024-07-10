@@ -36,12 +36,13 @@ Stack<T>::Stack()
 
 template <class T>
 void Stack<T>::push(T value) {
-  length++;
   if (length == 0) {
+    length++;
     top = std::make_unique<Stack<T>::Node>(value);
     return;
   }
 
+  length++;
   auto new_node { std::make_unique<Stack<T>::Node>(value) };
   new_node->next = std::move(top);
   top = std::move(new_node);

@@ -15,8 +15,8 @@ class Queue {
     void enqueue(T);
     std::unique_ptr<T> dequeue();
 
-    const T* peak_front() const;
-    const T* peak_back() const;
+    const std::unique_ptr<T> peak_front() const;
+    const std::unique_ptr<T> peak_back() const;
     int get_length() const;
   private:
     class Node {
@@ -28,8 +28,8 @@ class Queue {
       private:
     }; // class Node
 
-    std::unique_ptr<Queue<T>::Node> front;
-    Queue<T>::Node* back;
+    std::unique_ptr<Queue<T>::Node> back;
+    Queue<T>::Node* front;
     int length;
 }; // class Queue
 
@@ -40,28 +40,56 @@ Queue<T>::Queue()
 
 template <class T>
 void Queue<T>::enqueue(T value) {
+  if (length == 0) {
+    length++;
+    back = std::make_unique<Queue<T>::Node>(value);
+    front = back.get();
+    return;
+  }
 
+  length++;
+  front->next = std::make_unique<Queue<T>::Node>(value);
+  front = front->next.get();
 }
 
 template <class T>
 std::unique_ptr<T> Queue<T>::dequeue() {
-  return nullptr;
+  if (length == 0) {
+    return nullptr;
+  }
+
+  if (length == 1) {
+    length--;
+    auto value { std::make_unique<T>(front->value) };
+    front = nullptr;
+    back = nullptr;
+    return value;
+  }
+  length--;
+  auto value { std::make_unique<T>(front->value) };
+  back = std::move(back->next); 
+  return value;
 }
 
 template <class T>
-const T* Queue<T>::peak_front() const {
-  return front;
+const std::unique_ptr<T> Queue<T>::peak_front() const {
+  return front ? std::make_unique<T>(front->value) : nullptr;
 }
 
 template <class T>
-const T* Queue<T>::peak_back() const {
-  return back;
+const std::unique_ptr<T> Queue<T>::peak_back() const {
+  return back ? std::make_unique<T>(back->value) : nullptr;
 }
 
 template <class T>
 int Queue<T>::get_length() const {
   return length;
 } 
+
+template <class T>
+Queue<T>::Node::Node(T value) 
+  : value { value }, next { nullptr } {
+}
 
 } // namespace martineausw
 } // namespace dsa

@@ -14,7 +14,7 @@ class Stack {
     ~Stack() = default;
 
     void push(T);
-    T pop();
+    std::unique_ptr<T> pop();
     const T* peak() const;
     int get_length() const;
   private:
@@ -48,8 +48,16 @@ void Stack<T>::push(T value) {
 }
 
 template <class T>
-T Stack<T>::pop() {
+std::unique_ptr<T> Stack<T>::pop() {
+  if (length == 0) {
+    return nullptr;
+  }
 
+  length--;
+
+  auto value { std::make_unique<T>(top->value) };
+  top = std::move(top->next);
+  return std::move(value);
 }
 
 template <class T>

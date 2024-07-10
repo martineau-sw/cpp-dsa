@@ -164,6 +164,39 @@ TEST(DLinkedListTest, GetTailAfterLastRemove) {
   ASSERT_FALSE(list.get_tail());
   EXPECT_EQ(list.get_length(), 0);
 }
+
+TEST(DLinkedListTest, ArbitraryInsert) {
+  martineausw::dsa::DLinkedList list {};
+
+  ASSERT_FALSE(list.get_head());
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.insert(0, 0);
+  EXPECT_EQ(list.get_length(), 1);
+  list.insert(1, 2);
+  EXPECT_EQ(list.get_length(), 2);
+  list.insert(2, 4);
+  EXPECT_EQ(list.get_length(), 3);
+
+  list.insert(1, 1);
+  EXPECT_EQ(list.get_length(), 4);
+  list.insert(3, 3);
+  EXPECT_EQ(list.get_length(), 5);
+  list.insert(5, 5);
+  EXPECT_EQ(list.get_length(), 6);
+  
+  int i { 0 };
+  auto iterator { list.get_head().get() };
+  while(iterator) {
+    EXPECT_EQ(iterator.value, i++);
+    iterator = iterator.next.get();
+  }
+
+  while(iterator) {
+    EXPECT_EQ(iterator.value, i--);
+    iterator = iterator.prev;
+  }
+}
 /*
 TEST(DLinkedListTest, InsertIndexAtZero) {
 

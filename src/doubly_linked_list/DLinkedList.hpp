@@ -173,10 +173,6 @@ T DLinkedList<T>::remove_last() {
   return value;
 }
 
-T DLinkedList<T>::remove(int index) {
-  T value {}
-}
-
 } // namespace dsa
 } // namespace martineausw
 

@@ -166,7 +166,7 @@ TEST(DLinkedListTest, GetTailAfterLastRemove) {
 }
 
 TEST(DLinkedListTest, ArbitraryInsert) {
-  martineausw::dsa::DLinkedList list {};
+  martineausw::dsa::DLinkedList<int> list {};
 
   ASSERT_FALSE(list.get_head());
   ASSERT_FALSE(list.get_tail());
@@ -188,14 +188,66 @@ TEST(DLinkedListTest, ArbitraryInsert) {
   int i { 0 };
   auto iterator { list.get_head().get() };
   while(iterator) {
-    EXPECT_EQ(iterator.value, i++);
-    iterator = iterator.next.get();
+    EXPECT_EQ(iterator->value, i++);
+    iterator = iterator->next.get();
   }
 
   while(iterator) {
-    EXPECT_EQ(iterator.value, i--);
-    iterator = iterator.prev;
+    EXPECT_EQ(iterator->value, i--);
+    iterator = iterator->prev;
   }
+}
+
+TEST(DLinkedListTest, GetTailAfterLastRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0);
+  EXPECT_EQ(list.get_length(), 1);
+  list.append(1);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 2);
+  EXPECT_EQ(list.get_tail()->value, 1);
+  list.remove_last();
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 1);
+  EXPECT_EQ(list.get_tail()->value, 0);
+  list.remove_last();
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+}
+
+TEST(DLinkedListTest, ArbitraryRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_head());
+  ASSERT_FALSE(list.get_tail());
+  list.insert(0, 0);
+  list.insert(1, 1);
+  list.insert(2, 2);
+  list.insert(3, 3);
+  list.insert(4, 4);
+  list.insert(5, 5);
+  
+  // [0, 1, 2, 3, 4, 5]
+  EXPECT_EQ(list.get_length(), 6);
+  int removed { list.remove(3) };
+  // [0, 1, 2, 4, 5]
+  EXPECT_EQ(removed, 3);
+  EXPECT_EQ(list.get_length(), 5);
+  EXPECT_EQ(list.at(3), 4);
+  removed = list.remove(0);
+  // [1, 2, 4, 5]
+  EXPECT_EQ(removed, 0);
+  EXPECT_EQ(list.get_length(), 4);
+  EXPECT_EQ(list.get_head()->value, 1);
+  list.remove(4);
+
+  EXPECT_EQ(removed, 5);
+  EXPECT_EQ(list.get_length(), 3);
+  EXPECT_EQ(list.get_tail()->value, 4);
+
 }
 /*
 TEST(DLinkedListTest, InsertIndexAtZero) {

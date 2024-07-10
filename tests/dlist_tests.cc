@@ -242,12 +242,22 @@ TEST(DLinkedListTest, ArbitraryRemove) {
   EXPECT_EQ(removed, 0);
   EXPECT_EQ(list.get_length(), 4);
   EXPECT_EQ(list.get_head()->value, 1);
-  list.remove(4);
-
+  list.remove(3);
+  // [1, 2, 4]
   EXPECT_EQ(removed, 5);
   EXPECT_EQ(list.get_length(), 3);
   EXPECT_EQ(list.get_tail()->value, 4);
 
+  auto iterator { list.get_head().get() };
+  EXPECT_EQ(iterator->value, 1);
+  iterator = iterator->next.get();
+  EXPECT_EQ(iterator->value, 2);
+  iterator = iterator->next.get();
+  EXPECT_EQ(iterator->value, 4);
+  iterator = iterator->prev;
+  EXPECT_EQ(iterator->value, 2);
+  iterator = iterator->prev;
+  EXPECT_EQ(iterator->value, 1);
 }
 /*
 TEST(DLinkedListTest, InsertIndexAtZero) {

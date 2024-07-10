@@ -33,6 +33,36 @@ class Queue {
     int length;
 }; // class Queue
 
+template <class T>
+Queue<T>::Queue() 
+  : front { nullptr }, back { nullptr }, length { 0 } {
+}
+
+template <class T>
+void Queue<T>::enqueue(T value) {
+
+}
+
+template <class T>
+std::unique_ptr<T> Queue<T>::dequeue() {
+  return nullptr;
+}
+
+template <class T>
+const T* Queue<T>::peak_front() const {
+  return front;
+}
+
+template <class T>
+const T* Queue<T>::peak_back() const {
+  return back;
+}
+
+template <class T>
+int Queue<T>::get_length() const {
+  return length;
+} 
+
 } // namespace martineausw
 } // namespace dsa
 

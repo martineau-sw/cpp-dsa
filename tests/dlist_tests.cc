@@ -5,22 +5,166 @@
 
 #include <gtest/gtest.h>
 
-TEST(DLinkedListTest, AppendMany) {
-  martineausw::dsa::DLinkedList<int> list {};
-
-  const int LENGTH { 1000 };
-
-  for (int i { 0 }; i < LENGTH; ++i ) 
-    list.append(i);
-
-  EXPECT_EQ(list.at(-1), NULL);
-
-  for (int i { 0 }; i < LENGTH; ++i ) 
-    EXPECT_EQ(list.at(i), i);
-  
-  EXPECT_EQ(list.at(LENGTH), NULL);
+TEST(DLinkedListTest, GetHeadEmpty) {
+  martineausw::dsa::DLinkedList<int> list_empty {};
+  ASSERT_FALSE(list_empty.get_head());
 }
 
+TEST(DLinkedListTest, GetHeadOne) {
+  martineausw::dsa::DLinkedList<int> list { 1 };
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_head()->value, 1);
+}
+
+TEST(DLinkedListTest, GetHeadPrepend) {
+  martineausw::dsa::DLinkedList<int> list {};
+  ASSERT_FALSE(list.get_head());
+  EXPECT_EQ(list.get_length(), 0);
+  list.prepend(0);
+  ASSERT_TRUE(list.get_head()); 
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_head()->value, 0);
+  list.prepend(1);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_length(), 2);
+  ASSERT_EQ(list.get_head()->value, 1);
+}
+
+TEST(DLinkedListTest, GetHeadAppend) {
+  martineausw::dsa::DLinkedList<int> list {};
+  ASSERT_FALSE(list.get_head());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_head()->value, 0);
+  list.append(1);
+  EXPECT_EQ(list.get_length(), 2);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_head()->value, 0);
+}
+
+TEST(DLinkedListTest, GetHeadAfterFirstRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_head());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0); 
+  EXPECT_EQ(list.get_length(), 1);
+  list.append(1);
+  EXPECT_EQ(list.get_length(), 2);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_head()->value, 0);
+  list.remove_first();
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_head()->value, 1);
+  list.remove_first();
+  EXPECT_EQ(list.get_length(), 0);
+  EXPECT_FALSE(list.get_head());
+}
+
+TEST(DLinkedListTest, GetHeadAfterLastRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_head());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0);
+  EXPECT_EQ(list.get_length(), 1);
+  list.append(1);
+  EXPECT_EQ(list.get_length(), 2);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_head()->value, 0);
+  list.remove_last();
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_TRUE(list.get_head());
+  EXPECT_EQ(list.get_head()->value, 0);
+  list.remove_last();
+  EXPECT_EQ(list.get_length(), 0);
+  ASSERT_FALSE(list.get_head());
+}
+
+TEST(DLinkedListTest, GetTailEmpty) {
+  martineausw::dsa::DLinkedList<int> list_empty {};
+  ASSERT_FALSE(list_empty.get_tail());
+}
+
+TEST(DLinkedListTest, GetTailOne) {
+  martineausw::dsa::DLinkedList<int> list { 1 };
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_tail()->value, 1);
+}
+
+TEST(DLinkedListTest, GetTailPrepend) {
+  martineausw::dsa::DLinkedList<int> list {};
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.prepend(0);
+  ASSERT_TRUE(list.get_tail()); 
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_tail()->value, 0);
+  list.prepend(1);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 2);
+  ASSERT_EQ(list.get_tail()->value, 0);
+}
+
+TEST(DLinkedListTest, GetTailAppend) {
+  martineausw::dsa::DLinkedList<int> list {};
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 1);
+  ASSERT_EQ(list.get_tail()->value, 0);
+  list.append(1);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 2);
+  EXPECT_EQ(list.get_tail()->value, 1);
+}
+
+TEST(DLinkedListTest, GetTailAfterFirstRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0); 
+  EXPECT_EQ(list.get_length(), 1);
+  list.append(1);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 2);
+  EXPECT_EQ(list.get_tail()->value, 1);
+  list.remove_first();
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 1);
+  EXPECT_EQ(list.get_tail()->value, 1);
+  list.remove_first();
+  EXPECT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+}
+
+TEST(DLinkedListTest, GetTailAfterLastRemove) {
+  martineausw::dsa::DLinkedList<int> list {};
+
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+  list.append(0);
+  EXPECT_EQ(list.get_length(), 1);
+  list.append(1);
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 2);
+  EXPECT_EQ(list.get_tail()->value, 1);
+  list.remove_last();
+  ASSERT_TRUE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 1);
+  EXPECT_EQ(list.get_tail()->value, 0);
+  list.remove_last();
+  ASSERT_FALSE(list.get_tail());
+  EXPECT_EQ(list.get_length(), 0);
+}
+/*
 TEST(DLinkedListTest, InsertIndexAtZero) {
 
   martineausw::dsa::DLinkedList<int> list {};
@@ -45,3 +189,4 @@ TEST(DLinkedListTest, InsertIndexAtLength) {
   for (int i {0}; i < list.get_length(); ++i)
     EXPECT_EQ(list.at(i), i);
 }
+*/

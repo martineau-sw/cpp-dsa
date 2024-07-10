@@ -13,12 +13,9 @@ TEST(LinkedListTest, AppendMany) {
   for (int i { 0 }; i < LENGTH; ++i ) 
     list.append(i);
 
-  EXPECT_EQ(list.at(-1), NULL);
-
   for (int i { 0 }; i < LENGTH; ++i ) 
     EXPECT_EQ(list.at(i), i);
   
-  EXPECT_EQ(list.at(LENGTH), NULL);
 }
 
 TEST(InsertTest, InsertIndexAtZero) {

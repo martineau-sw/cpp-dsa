@@ -144,8 +144,7 @@ void LinkedList<T>::insert(int index, T value) {
 template <class T>
 T LinkedList<T>::remove_first() {
   T value { head->value };
-  auto next = std::move(head->next);
-  head = std::move(next);
+  head = std::move( head->next );
   length--;
   return value;
 }

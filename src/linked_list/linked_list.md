@@ -8,6 +8,10 @@ appending, making them a viable option for collections of uncertain size. This
 being the case, distinctions are made on time complexity analysis for 
 front/back and arbirtary cases. 
 
+This implementation allows for read-only access of linked list nodes to promote
+safety of linked list operations. Since the head is stored as a `unique_ptr` 
+cyclic linked lists are not possible.
+
 ## Operations
 
 ### Element access

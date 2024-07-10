@@ -13,6 +13,8 @@ namespace dsa {
 template <class T>
 class LinkedList {
   public: 
+  
+ 
     LinkedList();
     LinkedList(LinkedList<T> &&);
     LinkedList(T value);
@@ -27,8 +29,7 @@ class LinkedList {
 
     friend LinkedList<T> &operator+(std::initializer_list<T>, LinkedList<T> &);
     friend LinkedList<T> &operator+(T, LinkedList<T> &);
-    friend std::ostream &operator<<(std::ostream &, const LinkedList<T> &);
-    
+    friend LinkedList<T> &operator<<(std::ostream &, const LinkedList<T> &);
     const T& at(int) const;
     bool contains(T) const;
 
@@ -50,10 +51,21 @@ class LinkedList {
 
       const T &value() const;
       const LinkedList<T>::Node* next() const;
+
+      bool operator==(const LinkedList<T>::Node &) const;
+      bool operator!=(const LinkedList<T>::Node &) const;
+      bool operator<(const LinkedList<T>::Node &) const;
+      bool operator<=(const LinkedList<T>::Node &) const;
+      bool operator>(const LinkedList<T>::Node &) const;
+      bool operator>=(const LinkedList<T>::Node &) const;
+
+      LinkedList<T>::Node &operator++();
+      LinkedList<T>::Node &operator++(T);
     
     private:
       const T _value;
       std::unique_ptr<LinkedList<T>::Node> _next;
+      friend std::ostream &operator<<(std::ostream &, const LinkedList<T>::Node &);
     }; // class Node
     
     const LinkedList<T>::Node* head() const;
@@ -169,12 +181,12 @@ void LinkedList<T>::insert(int index, T value) {
   _length++;
 
   auto iterator { _head.get() };
-  for (int i { 0 }; i < index - 1; ++i)
-    iterator = iterator->_next.get();
+  for (int i { 0 }; i < index - 2; ++i)
+    ++iterator; 
 
   auto next = std::move(iterator->_next);
-  iterator->_next = std::make_unique<LinkedList<T>::Node>(value);
-  iterator->_next->_next = std::move(next);
+  iterator->_next = std::make_unique<LinkedList<T>::Node>(value, std::move(next));
+  // iterator->_next->_next = std::move(next);
 }
 
 template <class T>
@@ -205,7 +217,7 @@ T LinkedList<T>::remove_last() {
   auto iterator { _head.get() };
   T value { _tail->value() };
   while (iterator->next() != _tail) 
-    iterator = iterator->_next.get();
+    ++iterator;
   
   iterator->_next = nullptr;
   _tail = iterator;
@@ -230,8 +242,7 @@ T LinkedList<T>::remove(int index) {
   int i { 0 };
   auto iterator { _head.get() };
   for (int i { 0 }; i < index - 1; ++i) 
-    iterator = iterator->_next.get();
-  
+    ++iterator;
 
   T value = iterator->next()->value();
   iterator->_next = std::move(iterator->_next->_next);
@@ -293,9 +304,10 @@ template <class T>
 LinkedList<T> &LinkedList<T>::operator+(LinkedList<T> &other) {
   auto iterator { other._head.get() };
   while (iterator) {
-    append(iterator->value);
-    iterator = iterator->next.get();
+    *this + iterator->value;
+    ++iterator;
   }
+
   return *this;
 }
 
@@ -307,20 +319,25 @@ LinkedList<T> &operator+(T value, LinkedList<T> &list) {
 
 template <class T>
 LinkedList<T> &operator+(std::initializer_list<T> values, LinkedList<T> &list) {
-  for (auto value { values.rbegin() }; values != values.rend(); ++value) {
-    list.prepend(value);
-  }
+  for (auto value { values.rbegin() }; values != values.rend(); ++value) 
+    value + list;
+  
   return list;
 }
 
 template <class T>
 std::ostream &operator<<(std::ostream &out, const LinkedList<T> &list) {
   out << "[ ";
-  auto iterator { list._head.get() };
+  auto iterator {list.head()};
   while (iterator) {
-    out << iterator->value << " ";
-    iterator = iterator->next.get();
+    out << iterator << " ";
+    ++iterator;
   }
+  /*
+  for (auto iterator {list._head.get() }; iterator; ++iterator) {
+    out << iterator->value << " ";
+  }
+  */
   out << "]";
   return out;
 }
@@ -328,7 +345,7 @@ std::ostream &operator<<(std::ostream &out, const LinkedList<T> &list) {
 template <class T>
 LinkedList<T>::Node::Node(T value, std::unique_ptr<LinkedList<T>::Node> next) 
   : _value  { value }
-  , _next   { next ? std::move(next) : nullptr } {
+  , _next   { std::move(next) } {
 }
 
 template <class T>
@@ -345,6 +362,56 @@ const T &LinkedList<T>::Node::value() const {
 template <class T>
 const typename LinkedList<T>::Node* LinkedList<T>::Node::next() const {
   return _next.get();
+}
+
+
+template <class T>
+bool LinkedList<T>::Node::operator==(const LinkedList<T>::Node &node) const {
+  return _value == node._value;
+}
+
+template <class T>
+bool LinkedList<T>::Node::operator!=(const LinkedList<T>::Node &node) const {
+  return _value != node._value;
+}
+
+template <class T>
+bool LinkedList<T>::Node::operator<(const LinkedList<T>::Node &node) const {
+  return _value < node._value;
+}
+
+template <class T>
+bool LinkedList<T>::Node::operator<=(const LinkedList<T>::Node &node) const {
+  return _value <= node._value;
+}
+
+template <class T>
+bool LinkedList<T>::Node::operator>(const LinkedList<T>::Node &node) const {
+  return _value > node._value;
+}
+
+template <class T>
+bool LinkedList<T>::Node::operator>=(const LinkedList<T>::Node &node) const {
+  return _value >= node._value;
+}
+
+template <class T>
+typename LinkedList<T>::Node &LinkedList<T>::Node::operator++() {
+  return *_next;
+}
+
+template <class T>
+typename LinkedList<T>::Node &LinkedList<T>::Node::operator++(T result) {
+  LinkedList<T>::Node new_node { _value, _next };
+  ++(*this);
+  return new_node;
+}
+
+
+template <class T>
+std::ostream &operator<<(std::ostream &out, const typename LinkedList<T>::Node &node) {
+  out << node._value << (node._next ? " ->" : " ");
+  return out;
 }
 
 } // namespace dsa

@@ -10,6 +10,9 @@ TEST(LinkedListTest, GetHeadEmpty) {
   ASSERT_FALSE(list_empty.head());
 }
 
+TEST(LinkedListTest, PrintOperator) {
+}
+
 TEST(LinkedListTest, GetHeadOne) {
   martineausw::dsa::LinkedList<int> list { 1 };
   ASSERT_TRUE(list.head());
